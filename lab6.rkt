@@ -16,9 +16,11 @@
 ;; Type Signature: (composite relation relation) -> relation
 
 
-(define (composite relationOuter relationInner) (if (null? relationInner) '() (if (null? (related-to (car(cdr(car relationInner))) relationOuter))
-        (composite relationOuter (cdr relationInner)) (cons (list (car(car relationInner)) (car (related-to (car(cdr(car relationInner))) relationOuter)))
-                                                                       (composite relationOuter (cdr relationInner))))))
+(define (composite-helper Out In)
+  (if (null? Out) '() (if (=(caar Out)(cadar In)) (append (list(list (caar In) (cadar Out))) (composite-helper (cdr Out) In)) (composite-helper (cdr Out) In))))
+
+(define (composite Out In)
+  (if (null? In) '() (append (composite-helper Out In) (composite Out (cdr In)))))
 
 ;; Define power
 ;; power takes a relation and applies composite to itself k times
